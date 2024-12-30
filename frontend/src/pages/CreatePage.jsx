@@ -33,16 +33,18 @@ const CreatePage = () => {
     <>
       <h1 className="text-3xl font-bold text-center ">Create Product </h1>
       <div className="flex justify-center mt-7">
-        {/* Toast Notification */}
         {toastMessage && (
-          <div className="toast toast-center ">
+          <div className="toast toast-center">
             <div
-              className={`rounded-full p-5 bg-${toastType} text-md text-success-content font-semibold`}
+              className={`rounded-full p-5 ${
+                toastType === "success" ? "bg-green-500" : "bg-red-500"
+              } text-white text-md font-semibold`}
             >
               <span>{toastMessage}</span>
             </div>
           </div>
         )}
+
         {/* Input container*/}
         <div className="w-[300px] p-4 md:w-2/4 rounded-2xl bg-neutral">
           {/* Name Input */}

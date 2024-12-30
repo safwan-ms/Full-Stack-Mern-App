@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { MdEditSquare } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useProductStore } from "../store/product";
@@ -8,15 +8,15 @@ const ProductCard = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
-  const [enter, setEnter] = useState();
+  const modalRef = useRef(null); // Reference to the modal
 
   const handleDeleteProduct = async (id) => {
     const { success, message } = await deleteProduct(id);
     if (success) {
-      setToastMessage("Product deleted successfully");
+      setToastMessage(`✔️ ${message}`);
       setToastType("success");
     } else {
-      setToastMessage("Product Might be already deleted");
+      setToastMessage(`⚠️ ${message}`);
       setToastType("error");
     }
 
@@ -29,18 +29,33 @@ const ProductCard = ({ product }) => {
 
   const handleUpdateProduct = async (id, updatedProduct) => {
     await updateProduct(id, updatedProduct);
+    console.log(id);
   };
 
+  const openModal = () => {
+    modalRef.current.showModal(); // Open the modal using showModal()
+  };
+
+  const closeModal = () => {
+    modalRef.current.close(); // Close the modal using close()
+  };
+  console.log(toastMessage);
   return (
     <>
       {/* Toast Notification */}
+
       {toastMessage && (
-        <div className="toast toast-top toast-end">
-          <div className="bg-red-700 alert">
+        <div className="fixed z-50 transform -translate-x-1/2 toast toast-center bottom-10 left-1/2">
+          <div
+            className={`rounded-full p-5 ${
+              toastType === "success" ? "bg-green-500" : "bg-red-500"
+            } text-white text-md font-semibold`}
+          >
             <span>{toastMessage}</span>
           </div>
         </div>
       )}
+
       {/* Product Card */}
       <div className="h-[224px] sm:h-[300px] md:h-[320px] shadow-xl card bg-base-200 ">
         {/* Product Image */}
@@ -59,23 +74,22 @@ const ProductCard = ({ product }) => {
           </p>
           <div className="flex justify-end gap-2">
             <button
-              className=" btn btn-xs sm:btn-sm md:btn-md btn-info"
-              onClick={() =>
-                document.getElementById("my_modal_1").showModal(product._id)
-              }
+              className="btn btn-xs sm:btn-sm md:btn-md btn-info"
+              onClick={openModal} // Open modal on button click
             >
               <MdEditSquare className="md:text-lg " />
             </button>
             <button
-              className=" btn btn-xs sm:btn-sm md:btn-md btn-error bg-error"
+              className="btn btn-xs sm:btn-sm md:btn-md btn-error bg-error"
               onClick={() => handleDeleteProduct(product._id)}
             >
               <RiDeleteBin6Fill className="md:text-lg" />
             </button>
           </div>
         </div>
+
         {/* Modal */}
-        <dialog id="my_modal_1" className="modal ">
+        <dialog className="modal" ref={modalRef}>
           <div className="modal-box bg-base-200">
             {/* Modal Title */}
             <h3 className="text-lg font-bold">Update Product</h3>
@@ -136,6 +150,7 @@ const ProductCard = ({ product }) => {
             <div className="modal-action">
               <form method="dialog">
                 <button
+                  type="button"
                   className="btn btn-info hover:bg-info btn-xs sm:btn-sm "
                   onClick={() =>
                     handleUpdateProduct(product._id, updatedProduct)
@@ -145,7 +160,11 @@ const ProductCard = ({ product }) => {
                 </button>
               </form>
               <form method="dialog">
-                <button className="btn btn-xs sm:btn-sm btn-error">
+                <button
+                  type="button"
+                  className="btn btn-xs sm:btn-sm btn-error"
+                  onClick={closeModal} // Close modal on button click
+                >
                   Close
                 </button>
               </form>
