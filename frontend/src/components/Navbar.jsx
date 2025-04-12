@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { MdLibraryAdd } from "react-icons/md";
 import ThemeController from "./ThemeController";
