@@ -22,6 +22,7 @@ It is built with **Node.js, Express, MongoDB, React** and is designed for learni
   /models
   /routes
   /controllers
+  /database
   server.js
 /frontend
   /src
@@ -80,7 +81,6 @@ It is built with **Node.js, Express, MongoDB, React** and is designed for learni
 |:------:|:--------:|:------------|
 | POST   | /api/products | Add a new product |
 | GET    | /api/products | Get all products |
-| GET    | /api/products/:id | Get a single product by ID |
 | PUT    | /api/products/:id | Update a product |
 | DELETE | /api/products/:id | Delete a product |
 
